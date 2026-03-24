@@ -1,0 +1,38 @@
+# Environment
+.env
+.env.backup
+.env.production
+
+# Dependencies
+/vendor
+/node_modules
+
+# Build artifacts
+/public/build
+/public/hot
+
+# Laravel runtime files
+/storage/*.key
+/storage/logs/*.log
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/bootstrap/cache/*.php
+
+# IDE / OS
+.idea
+.vscode
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# Testing / coverage
+/coverage
+.phpunit.result.cache
+
+# Misc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
