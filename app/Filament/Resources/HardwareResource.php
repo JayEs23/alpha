@@ -58,7 +58,7 @@ class HardwareResource extends Resource
                     ->options(EnumsHardwareType::options()),
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name'),
-                Forms\Components\Select::make('provaider_id')
+                Forms\Components\Select::make('provider_id')
                     ->relationship('provider', 'name')
                     ->label('Provider')
                     ->required(),
@@ -121,7 +121,7 @@ class HardwareResource extends Resource
                 Tables\Filters\SelectFilter::make('user_id')
                     ->relationship('user', 'name')
                     ->label('User'),
-                Tables\Filters\SelectFilter::make('provaider_id')
+                Tables\Filters\SelectFilter::make('provider_id')
                     ->relationship('provider', 'name')
                     ->label('Provider'),
             ])

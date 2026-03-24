@@ -20,7 +20,7 @@ class PeripheralsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('provaider_id')
+                Forms\Components\Select::make('provider_id')
                     ->relationship('provider', 'name')
                     ->label('Provider')
                     ->required(),

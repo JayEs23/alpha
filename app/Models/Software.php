@@ -17,7 +17,7 @@ class Software extends Model
     protected $table = 'software';
 
     protected $fillable = [
-        'company_id', 'name', 'type', 'status', 'current', 'licenses', 'license_period', 'provaider_id', 'purchased_at', 'expired_at',
+        'company_id', 'name', 'type', 'status', 'current', 'licenses', 'license_period', 'provider_id', 'purchased_at', 'expired_at',
     ];
 
     protected $casts = [
@@ -31,13 +31,8 @@ class Software extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function provaider(): BelongsTo
-    {
-        return $this->belongsTo(Provider::class, 'provaider_id');
-    }
-
     public function provider(): BelongsTo
     {
-        return $this->provaider();
+        return $this->belongsTo(Provider::class, 'provider_id');
     }
 }

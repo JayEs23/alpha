@@ -93,11 +93,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $company ? $this->hasCompanyPermission($company, $permission) : false;
     }
 
-    public function hasComapanyModel(Model $model): bool
-    {
-        return $this->hasCompanyModel($model);
-    }
-
     public function hasCompanyModel(Model $model): bool
     {
         return (int) $this->current_company_id === (int) $model->company_id;

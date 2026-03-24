@@ -54,7 +54,7 @@ class HardwareRelationManager extends RelationManager
                     ->options(HardwareType::options()),
                 Forms\Components\Select::make('user_id')
                     ->relationship('user', 'name'),
-                Forms\Components\Select::make('provaider_id')
+                Forms\Components\Select::make('provider_id')
                     ->relationship('provider', 'name')
                     ->label('Provider')
                     ->required(),

@@ -22,7 +22,7 @@ class PeripheralFactory extends Factory
             'current' => $this->faker->boolean(60),
             'user_id' => User::factory(),
             'company_id' => Company::factory(),
-            'provaider_id' => Provider::factory(),
+            'provider_id' => Provider::factory(),
             'purchased_at' => $this->faker->dateTimeBetween('-2 years', 'now'),
             'created_at' => $this->faker->dateTimeBetween('-2 years', 'now')->format('Y-m-d H:i:s'),
         ];

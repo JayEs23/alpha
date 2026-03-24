@@ -25,7 +25,7 @@ class SoftwareFactory extends Factory
             'current' => $this->faker->boolean(60),
             'company_id' => Company::factory(),
             'status' => $this->faker->randomElement(HardwareStatus::all()),
-            'provaider_id' => Provider::factory(),
+            'provider_id' => Provider::factory(),
             'licenses' => $this->faker->regexify('[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}'),
             'license_period' => $this->faker->dateTimeBetween('now', '+1 years'),
             'purchased_at' => $this->faker->dateTimeBetween('-5 years', 'now'),

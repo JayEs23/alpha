@@ -19,7 +19,7 @@ class Hardware extends Model
     protected $table = 'hardware';
 
     protected $fillable = [
-        'make', 'model', 'serial', 'os_name', 'company_id', 'os_version', 'type', 'status', 'ram', 'cpu', 'user_id', 'provaider_id', 'purchased_at',
+        'make', 'model', 'serial', 'os_name', 'company_id', 'os_version', 'type', 'status', 'ram', 'cpu', 'user_id', 'provider_id', 'purchased_at',
     ];
 
     protected $casts = [
@@ -36,13 +36,8 @@ class Hardware extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function provaider(): BelongsTo
-    {
-        return $this->belongsTo(Provider::class, 'provaider_id');
-    }
-
     public function provider(): BelongsTo
     {
-        return $this->provaider();
+        return $this->belongsTo(Provider::class, 'provider_id');
     }
 }

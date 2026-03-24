@@ -13,7 +13,7 @@ class Provider extends Model
     use HasFactory;
     use HasCompanyId;
 
-    protected $table = 'provaiders';
+    protected $table = 'providers';
 
     protected $fillable = [
         'name',
@@ -27,21 +27,16 @@ class Provider extends Model
 
     public function hardware(): HasMany
     {
-        return $this->hasMany(Hardware::class, 'provaider_id');
+        return $this->hasMany(Hardware::class, 'provider_id');
     }
 
     public function software(): HasMany
     {
-        return $this->hasMany(Software::class, 'provaider_id');
+        return $this->hasMany(Software::class, 'provider_id');
     }
 
     public function peripherals(): HasMany
     {
-        return $this->hasMany(Peripheral::class, 'provaider_id');
-    }
-
-    public function periphels(): HasMany
-    {
-        return $this->peripherals();
+        return $this->hasMany(Peripheral::class, 'provider_id');
     }
 }

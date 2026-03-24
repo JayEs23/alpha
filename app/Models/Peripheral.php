@@ -16,7 +16,7 @@ class Peripheral extends Model
     use HasUserId;
     use HasCompanyId;
 
-    protected $table = 'periphels';
+    protected $table = 'peripherals';
 
     protected $fillable = [
         'make',
@@ -25,7 +25,7 @@ class Peripheral extends Model
         'company_id',
         'type',
         'user_id',
-        'provaider_id',
+        'provider_id',
         'purchased_at',
         'current',
     ];
@@ -47,11 +47,6 @@ class Peripheral extends Model
 
     public function provider(): BelongsTo
     {
-        return $this->belongsTo(Provider::class, 'provaider_id');
-    }
-
-    public function provaider(): BelongsTo
-    {
-        return $this->provider();
+        return $this->belongsTo(Provider::class, 'provider_id');
     }
 }

@@ -57,7 +57,7 @@ class AssetService implements AssetServiceInterface
     public function createHardware(array $data, User $actor): Hardware
     {
         $companyId = $this->requiredCompanyId($actor);
-        $this->assertProviderBelongsToCompany((int) $data['provaider_id'], $companyId);
+        $this->assertProviderBelongsToCompany((int) $data['provider_id'], $companyId);
         $this->assertAssigneeBelongsToCompany($data['user_id'] ?? null, $companyId);
 
         return DB::transaction(function () use ($data, $companyId, $actor): Hardware {
@@ -75,7 +75,7 @@ class AssetService implements AssetServiceInterface
     {
         $companyId = $this->requiredCompanyId($actor);
         $this->assertTenantRecord($hardware->company_id, $companyId);
-        $this->assertProviderBelongsToCompany((int) ($data['provaider_id'] ?? $hardware->provaider_id), $companyId);
+        $this->assertProviderBelongsToCompany((int) ($data['provider_id'] ?? $hardware->provider_id), $companyId);
         $this->assertAssigneeBelongsToCompany($data['user_id'] ?? $hardware->user_id, $companyId);
 
         return DB::transaction(function () use ($hardware, $data, $companyId, $actor): Hardware {
@@ -91,7 +91,7 @@ class AssetService implements AssetServiceInterface
     public function createSoftware(array $data, User $actor): Software
     {
         $companyId = $this->requiredCompanyId($actor);
-        $this->assertProviderBelongsToCompany((int) $data['provaider_id'], $companyId);
+        $this->assertProviderBelongsToCompany((int) $data['provider_id'], $companyId);
 
         return DB::transaction(function () use ($data, $companyId, $actor): Software {
             $software = new Software();
@@ -108,7 +108,7 @@ class AssetService implements AssetServiceInterface
     {
         $companyId = $this->requiredCompanyId($actor);
         $this->assertTenantRecord($software->company_id, $companyId);
-        $this->assertProviderBelongsToCompany((int) ($data['provaider_id'] ?? $software->provaider_id), $companyId);
+        $this->assertProviderBelongsToCompany((int) ($data['provider_id'] ?? $software->provider_id), $companyId);
 
         return DB::transaction(function () use ($software, $data, $companyId, $actor): Software {
             $software->fill($data);
@@ -123,7 +123,7 @@ class AssetService implements AssetServiceInterface
     public function createPeripheral(array $data, User $actor): Peripheral
     {
         $companyId = $this->requiredCompanyId($actor);
-        $this->assertProviderBelongsToCompany((int) $data['provaider_id'], $companyId);
+        $this->assertProviderBelongsToCompany((int) $data['provider_id'], $companyId);
         $this->assertAssigneeBelongsToCompany($data['user_id'] ?? null, $companyId);
 
         return DB::transaction(function () use ($data, $companyId, $actor): Peripheral {
@@ -141,7 +141,7 @@ class AssetService implements AssetServiceInterface
     {
         $companyId = $this->requiredCompanyId($actor);
         $this->assertTenantRecord($peripheral->company_id, $companyId);
-        $this->assertProviderBelongsToCompany((int) ($data['provaider_id'] ?? $peripheral->provaider_id), $companyId);
+        $this->assertProviderBelongsToCompany((int) ($data['provider_id'] ?? $peripheral->provider_id), $companyId);
         $this->assertAssigneeBelongsToCompany($data['user_id'] ?? $peripheral->user_id, $companyId);
 
         return DB::transaction(function () use ($peripheral, $data, $companyId, $actor): Peripheral {
