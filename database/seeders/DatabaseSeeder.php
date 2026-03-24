@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RolesTableSeeder::class,
             RoleHasPermissionsTableSeeder::class,
             UserSeeder::class,
+            AssetOperationsSeeder::class,
         ]);
 
         $this->command->info('Running User factory...');

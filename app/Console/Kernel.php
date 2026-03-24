@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->job(new PingServer)->everyMinute();
+        $schedule->command('assets:generate-service-tasks')->dailyAt('01:00');
+        $schedule->command('assets:send-service-reminders')->everyFifteenMinutes();
     }
 
     /**

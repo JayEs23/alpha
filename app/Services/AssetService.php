@@ -24,6 +24,36 @@ class AssetService implements AssetServiceInterface
     private const SERVICE_STATUS_OPEN = 'open';
     private const SERVICE_STATUS_COMPLETED = 'completed';
 
+    public function createAsset(array $data, User $actor): Asset
+    {
+        $companyId = $this->requiredCompanyId($actor);
+        $this->assertProviderBelongsToCompanyIfProvided($data['provider_id'] ?? null, $companyId);
+        $this->assertAssigneeBelongsToCompany($data['assigned_user_id'] ?? null, $companyId);
+
+        return DB::transaction(function () use ($data, $companyId): Asset {
+            $asset = new Asset();
+            $asset->fill(array_merge($data, ['company_id' => $companyId]));
+            $asset->save();
+
+            return $asset;
+        });
+    }
+
+    public function updateAsset(Asset $asset, array $data, User $actor): Asset
+    {
+        $companyId = $this->requiredCompanyId($actor);
+        $this->assertTenantRecord((int) $asset->company_id, $companyId);
+        $this->assertProviderBelongsToCompanyIfProvided($data['provider_id'] ?? $asset->provider_id, $companyId);
+        $this->assertAssigneeBelongsToCompany($data['assigned_user_id'] ?? $asset->assigned_user_id, $companyId);
+
+        return DB::transaction(function () use ($asset, $data): Asset {
+            $asset->fill($data);
+            $asset->save();
+
+            return $asset;
+        });
+    }
+
     public function createHardware(array $data, User $actor): Hardware
     {
         $companyId = $this->requiredCompanyId($actor);
@@ -147,6 +177,68 @@ class AssetService implements AssetServiceInterface
         });
     }
 
+    public function updateServicePlan(AssetServicePlan $servicePlan, array $data, User $actor): AssetServicePlan
+    {
+        $companyId = $this->requiredCompanyId($actor);
+        $this->assertTenantRecord((int) $servicePlan->company_id, $companyId);
+        $this->assertAssigneeBelongsToCompany($data['default_assigned_user_id'] ?? $servicePlan->default_assigned_user_id, $companyId);
+
+        if (array_key_exists('asset_id', $data)) {
+            $assetExists = Asset::query()
+                ->whereKey((int) $data['asset_id'])
+                ->where('company_id', $companyId)
+                ->exists();
+
+            if (! $assetExists) {
+                throw new InvalidArgumentException('Service plan asset must belong to current company.');
+            }
+        }
+
+        return DB::transaction(function () use ($servicePlan, $data): AssetServicePlan {
+            $servicePlan->fill($data);
+            $servicePlan->save();
+
+            return $servicePlan;
+        });
+    }
+
+    public function createServiceTask(array $data, User $actor): AssetServiceTask
+    {
+        $companyId = $this->requiredCompanyId($actor);
+        $this->assertAssigneeBelongsToCompany($data['assigned_to_user_id'] ?? null, $companyId);
+        $this->assertAssetBelongsToCompany((int) $data['asset_id'], $companyId);
+        $this->assertServicePlanBelongsToCompanyIfProvided($data['service_plan_id'] ?? null, $companyId);
+        $this->assertServiceStatusExists((int) $data['status_id']);
+
+        return DB::transaction(function () use ($data, $companyId, $actor): AssetServiceTask {
+            $serviceTask = new AssetServiceTask();
+            $serviceTask->fill(array_merge($data, [
+                'company_id' => $companyId,
+                'created_by_user_id' => $actor->id,
+            ]));
+            $serviceTask->save();
+
+            return $serviceTask;
+        });
+    }
+
+    public function updateServiceTask(AssetServiceTask $serviceTask, array $data, User $actor): AssetServiceTask
+    {
+        $companyId = $this->requiredCompanyId($actor);
+        $this->assertTenantRecord((int) $serviceTask->company_id, $companyId);
+        $this->assertAssigneeBelongsToCompany($data['assigned_to_user_id'] ?? $serviceTask->assigned_to_user_id, $companyId);
+        $this->assertAssetBelongsToCompany((int) ($data['asset_id'] ?? $serviceTask->asset_id), $companyId);
+        $this->assertServicePlanBelongsToCompanyIfProvided($data['service_plan_id'] ?? $serviceTask->service_plan_id, $companyId);
+        $this->assertServiceStatusExists((int) ($data['status_id'] ?? $serviceTask->status_id));
+
+        return DB::transaction(function () use ($serviceTask, $data): AssetServiceTask {
+            $serviceTask->fill($data);
+            $serviceTask->save();
+
+            return $serviceTask;
+        });
+    }
+
     public function generateDueServiceTasks(\DateTimeInterface $asOf, User $actor): int
     {
         $companyId = $this->requiredCompanyId($actor);
@@ -248,6 +340,15 @@ class AssetService implements AssetServiceInterface
         }
     }
 
+    private function assertProviderBelongsToCompanyIfProvided(?int $providerId, int $companyId): void
+    {
+        if (is_null($providerId)) {
+            return;
+        }
+
+        $this->assertProviderBelongsToCompany($providerId, $companyId);
+    }
+
     private function assertAssigneeBelongsToCompany(?int $userId, int $companyId): void
     {
         if (is_null($userId)) {
@@ -269,6 +370,45 @@ class AssetService implements AssetServiceInterface
         return (int) AssetServiceTaskStatus::query()
             ->where('code', $code)
             ->value('id');
+    }
+
+    private function assertAssetBelongsToCompany(int $assetId, int $companyId): void
+    {
+        $exists = Asset::query()
+            ->whereKey($assetId)
+            ->where('company_id', $companyId)
+            ->exists();
+
+        if (! $exists) {
+            throw new InvalidArgumentException('Asset does not belong to current company.');
+        }
+    }
+
+    private function assertServicePlanBelongsToCompanyIfProvided(?int $servicePlanId, int $companyId): void
+    {
+        if (is_null($servicePlanId)) {
+            return;
+        }
+
+        $exists = AssetServicePlan::query()
+            ->whereKey($servicePlanId)
+            ->where('company_id', $companyId)
+            ->exists();
+
+        if (! $exists) {
+            throw new InvalidArgumentException('Service plan does not belong to current company.');
+        }
+    }
+
+    private function assertServiceStatusExists(int $statusId): void
+    {
+        $exists = AssetServiceTaskStatus::query()
+            ->whereKey($statusId)
+            ->exists();
+
+        if (! $exists) {
+            throw new InvalidArgumentException('Invalid service task status.');
+        }
     }
 
     private function scheduleReminderForTask(AssetServiceTask $task, int $reminderDaysBefore, int $companyId): void
