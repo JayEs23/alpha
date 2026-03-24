@@ -80,6 +80,12 @@ interface AssetServiceInterface
 
     public function assignAsset(string $assetType, int $assetId, int $assigneeUserId, User $actor, ?string $notes = null): void;
     public function unassignAsset(string $assetType, int $assetId, User $actor, ?string $notes = null): void;
+
+    public function createServicePlan(int $assetId, array $payload, User $actor): object;
+    public function updateServicePlan(int $servicePlanId, array $payload, User $actor): object;
+    public function generateDueServiceTasks(\DateTimeInterface $asOf, User $actor): int;
+    public function completeServiceTask(int $serviceTaskId, array $payload, User $actor): object;
+    public function scheduleServiceReminders(\DateTimeInterface $asOf, User $actor): int;
 }
 ```
 
@@ -140,6 +146,11 @@ interface NotificationServiceInterface
 - `TaskCommentAdded`
 - `AssetAssigned`
 - `AssetStatusChanged`
+- `AssetServicePlanCreated`
+- `AssetServiceTaskGenerated`
+- `AssetServiceTaskCompleted`
+- `AssetServiceReminderScheduled`
+- `AssetServiceReminderSent`
 - `CompanyMemberInvited`
 - `CompanyMemberRoleChanged`
 

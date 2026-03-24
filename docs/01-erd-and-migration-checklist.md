@@ -6,6 +6,12 @@ This document defines the target entity relationship model and a safe migration 
 ## Target ERD (Textual)
 - `companies` 1---* `company_memberships` *---1 `users`
 - `companies` 1---* `providers`
+- `companies` 1---* `asset_categories`
+- `companies` 1---* `asset_statuses`
+- `companies` 1---* `assets`
+- `assets` 1---* `asset_service_plans`
+- `assets` 1---* `asset_service_tasks`
+- `asset_service_tasks` 1---* `asset_service_reminders`
 - `companies` 1---* `projects`
 - `projects` 1---* `tasks`
 - `tasks` 1---* `task_comments`
@@ -82,6 +88,20 @@ Always perform data snapshots and rollback validation before production cutover.
 - [ ] Add uniqueness constraints:
   - `projects(company_id, key)`
   - `tasks(project_id, task_number)`.
+
+## Wave 4.5 - Recurring Service Operations
+- [ ] Create service operations tables:
+  - `asset_service_task_statuses` (lookup)
+  - `assets` (canonical cross-industry asset record)
+  - `asset_service_plans` (recurrence rules)
+  - `asset_service_tasks` (generated/assigned service work items)
+  - `asset_service_reminders` (scheduled + sent reminders)
+- [ ] Add indexes for due-work queries:
+  - `asset_service_plans(next_due_at, is_active)`
+  - `asset_service_tasks(status_id, due_at, assigned_to_user_id)`
+  - `asset_service_reminders(remind_at, sent_at)`
+- [ ] Backfill existing hardware/software/peripheral records to `assets`.
+- [ ] Generate first due service tasks for assets with service intervals.
 
 ## Wave 5 - Service-Layer Cutover
 - [ ] Move all write logic from Filament resources into services.

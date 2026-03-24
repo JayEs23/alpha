@@ -48,7 +48,7 @@ class HardwarePolicy
     {
         return
             $user->can('update_hardware') ||
-            $user->hasComapanyModel($hardware);
+            $user->hasCompanyModel($hardware);
     }
 
     /**
@@ -59,7 +59,7 @@ class HardwarePolicy
     public function delete(User $user, Hardware $hardware)
     {
         return $user->can('delete_hardware') ||
-            $user->hasComapanyModel($hardware);
+            $user->hasCompanyModel($hardware);
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Hardware;
-use App\Models\Periphel;
-use App\Models\Provaider;
+use App\Models\Peripheral;
+use App\Models\Provider;
 use App\Models\Software;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
@@ -28,16 +28,16 @@ class StatsOverview extends BaseWidget
 
         $hardwares = Hardware::count();
         $softwares = Software::count();
-        $provaiders = Provaider::count();
-        $periphels = Periphel::count();
+        $providers = Provider::count();
+        $peripherals = Peripheral::count();
 
         // $user = DB::table('users')->where('company_id', auth()->user()->current_company_id)->count();
 
         return [
             Card::make('Hardware', $hardwares),
             Card::make('Software', $softwares),
-            Card::make('Providers', $provaiders),
-            Card::make('Peripherals', $periphels),
+            Card::make('Providers', $providers),
+            Card::make('Peripherals', $peripherals),
 
             // Card::make('Puntor', $user),
         ];

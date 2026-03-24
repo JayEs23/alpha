@@ -48,7 +48,7 @@ class SoftwarePolicy
     public function update(User $user, Software $software)
     {
         return $user->can('update_software') ||
-            $user->hasComapanyModel($software);
+            $user->hasCompanyModel($software);
     }
 
     /**
@@ -59,7 +59,7 @@ class SoftwarePolicy
     public function delete(User $user, Software $software)
     {
         return $user->can('delete_software') ||
-            $user->hasComapanyModel($software);
+            $user->hasCompanyModel($software);
     }
 
     /**

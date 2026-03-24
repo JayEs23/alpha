@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Company;
-use App\Models\Provaider;
+use App\Models\Provider;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -61,7 +61,7 @@ class HardwareFactory extends Factory
             'purchased_at' => $this->faker->dateTimeBetween('-5 years', 'now'),
             'user_id' => User::factory(),
             'company_id' => Company::factory(),
-            'provaider_id' => Provaider::factory(),
+            'provaider_id' => Provider::factory(),
             'created_at' => $this->faker->dateTimeBetween('-2 years', 'now')->format('Y-m-d H:i:s'),
         ];
     }

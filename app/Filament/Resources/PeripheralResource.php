@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SoftwareResource\Pages;
-use App\Models\Software;
+use App\Filament\Resources\PeripheralResource\Pages;
+use App\Models\Peripheral;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -12,13 +12,15 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SoftwareResource extends Resource
+class PeripheralResource extends Resource
 {
-    protected static ?string $model = Software::class;
+    protected static ?string $model = Peripheral::class;
+    protected static ?string $modelLabel = 'Peripheral';
+    protected static ?string $pluralModelLabel = 'Peripherals';
 
-    protected static ?string $navigationGroup = 'bookmark';
+    protected static ?string $navigationGroup = 'meta';
 
-    protected static ?string $navigationIcon = 'heroicon-o-desktop-computer';
+    protected static ?string $navigationIcon = 'heroicon-o-camera';
 
     public static function form(Form $form): Form
     {
@@ -28,24 +30,21 @@ class SoftwareResource extends Resource
                     ->relationship('provider', 'name')
                     ->label('Provider')
                     ->required(),
-                Forms\Components\TextInput::make('name')
-                    ->label('Software Name')
+                Forms\Components\TextInput::make('make')
                     ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('model')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('serial')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('type')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('licenses'),
-                Forms\Components\TextInput::make('license_period'),
+                Forms\Components\Toggle::make('current')
+                    ->required(),
                 Forms\Components\DateTimePicker::make('purchased_at')
                     ->required(),
-                Forms\Components\DateTimePicker::make('expired_at'),
-                Forms\Components\Toggle::make('current')
-                    ->required()
-                    ->default(true),
             ]);
     }
 
@@ -53,24 +52,16 @@ class SoftwareResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('user.name'),
                 Tables\Columns\TextColumn::make('provider.name')
                     ->label('Provider'),
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('make'),
+                Tables\Columns\TextColumn::make('model'),
+                Tables\Columns\TextColumn::make('serial'),
                 Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('status'),
                 Tables\Columns\IconColumn::make('current')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('licenses'),
-                Tables\Columns\TextColumn::make('license_period'),
                 Tables\Columns\TextColumn::make('purchased_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('expired_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime(),
             ])
             ->filters([
@@ -79,7 +70,7 @@ class SoftwareResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -99,9 +90,9 @@ class SoftwareResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSoftware::route('/'),
-            'create' => Pages\CreateSoftware::route('/create'),
-            'edit' => Pages\EditSoftware::route('/{record}/edit'),
+            'index' => Pages\ListPeripherals::route('/'),
+            'create' => Pages\CreatePeripheral::route('/create'),
+            'edit' => Pages\EditPeripheral::route('/{record}/edit'),
         ];
     }
 

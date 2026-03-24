@@ -63,14 +63,24 @@ class Company extends FilamentCompaniesCompany
         return $this->hasMany(Software::class);
     }
 
+    public function peripherals(): HasMany
+    {
+        return $this->hasMany(Peripheral::class);
+    }
+
+    public function providers(): HasMany
+    {
+        return $this->hasMany(Provider::class, 'company_id');
+    }
+
     public function periphels(): HasMany
     {
-        return $this->hasMany(Periphel::class);
+        return $this->peripherals();
     }
 
     public function provaider(): HasMany
     {
-        return $this->hasMany(Provaider::class);
+        return $this->providers();
     }
 
     public function employeeships(): HasMany

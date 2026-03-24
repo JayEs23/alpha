@@ -49,15 +49,18 @@ Acceptance Criteria:
 ### Sprint 3: Work Domain Schema
 Goals:
 - Introduce projects/tasks/workflow core tables.
+- Introduce recurring service operations schema for assets.
 
 Deliverables:
 - tables: `projects`, `workflows`, `workflow_statuses`, `workflow_transitions`, `tasks`.
+- tables: `assets`, `asset_categories`, `asset_statuses`, `asset_service_plans`, `asset_service_tasks`, `asset_service_reminders`.
 - lookup seeding for priorities and statuses.
 - uniqueness constraints for project key and task number.
 
 Acceptance Criteria:
 - create/read/update tasks and projects through seed scripts.
 - database constraints prevent invalid duplicates.
+- due service tasks are generated from recurring plans and assignable to users.
 
 ### Sprint 4: Service Layer Core
 Goals:
@@ -104,14 +107,17 @@ Acceptance Criteria:
 ### Sprint 7: Collaboration Features
 Goals:
 - comments, watchers, links, and asset-task relationships.
+- service-task reminders and notification delivery for upcoming/overdue servicing.
 
 Deliverables:
 - tables and services for comments/watchers/links.
 - in-app notifications for assignment and status changes.
+- reminder scheduler for service plans (`daily`) with notification dispatch.
 
 Acceptance Criteria:
 - comments and watcher notifications functional.
 - task-to-asset linking visible in task and asset views.
+- reminder events are generated and delivered to assigned users before due date.
 
 ### Sprint 8: Dashboards and Reports v1
 Goals:

@@ -6,15 +6,15 @@ namespace App\Providers;
 
 use App\Models\Company;
 use App\Models\Hardware;
-use App\Models\Periphel;
-use App\Models\Provaider;
+use App\Models\Peripheral;
+use App\Models\Provider;
 use App\Models\Software;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
 use App\Policies\CompanyPolicyMain;
 use App\Policies\HardwarePolicy;
-use App\Policies\PeriphelPolicy;
-use App\Policies\ProvaiderPolicy;
+use App\Policies\PeripheralPolicy;
+use App\Policies\ProviderPolicy;
 use App\Policies\SchedulePolicy;
 use App\Policies\SoftwarePolicy;
 use App\Policies\UserPolicy;
@@ -32,8 +32,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Company::class => CompanyPolicyMain::class,
         Hardware::class => HardwarePolicy::class,
-        Periphel::class => PeriphelPolicy::class,
-        Provaider::class => ProvaiderPolicy::class,
+        Peripheral::class => PeripheralPolicy::class,
+        Provider::class => ProviderPolicy::class,
         Software::class => SoftwarePolicy::class,
         Activity::class => ActivityPolicy::class,
         User::class => UserPolicy::class,

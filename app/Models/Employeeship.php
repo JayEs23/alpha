@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\HasComapanyId;
+use App\Traits\HasCompanyId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Wallo\FilamentCompanies\Employeeship as FilamentCompaniesEmployeeship;
 
 class Employeeship extends FilamentCompaniesEmployeeship
 {
-    use HasComapanyId, HasFactory;
+    use HasCompanyId, HasFactory;
 
     /**
      * Indicates if the IDs are auto-incrementing.

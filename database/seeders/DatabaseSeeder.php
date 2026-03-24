@@ -23,11 +23,11 @@ class DatabaseSeeder extends Seeder
         $this->command->info('Running User factory...');
         \App\Models\User::factory(10)->create();
 
-        $this->command->info('Running Provaider factory...');
-        \App\Models\Provaider::factory(20)->create();
+        $this->command->info('Running Provider factory...');
+        \App\Models\Provider::factory(20)->create();
 
-        $this->command->info('Running Periphel factory...');
-        \App\Models\Periphel::factory(200)->create();
+        $this->command->info('Running Peripheral factory...');
+        \App\Models\Peripheral::factory(200)->create();
 
         $this->command->info('Running Software factory...');
         \App\Models\Software::factory(200)->create();

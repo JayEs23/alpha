@@ -26,6 +26,10 @@ Legend:
 | Asset create/update | Y | Y | Y | C | N |
 | Asset assign/unassign | Y | Y | Y | C | N |
 | Asset retire/dispose | Y | Y | C | N | N |
+| Service plan create/update | Y | Y | Y | C | N |
+| Service task assign/reassign | Y | Y | Y | C | N |
+| Service task complete | Y | Y | Y | Y | N |
+| Service reminder configuration | Y | Y | C | N | N |
 | Project create/update/archive | Y | Y | Y | N | N |
 | Task create | Y | Y | Y | Y | N |
 | Task edit | Y | Y | Y | C | N |
@@ -74,6 +78,9 @@ Legend:
 - `membership.invite`, `membership.remove`, `membership.change_role`
 - `providers.view`, `providers.create`, `providers.update`, `providers.delete`
 - `assets.view`, `assets.create`, `assets.update`, `assets.assign`, `assets.retire`
+- `asset_service_plans.view`, `asset_service_plans.create`, `asset_service_plans.update`
+- `asset_service_tasks.view`, `asset_service_tasks.assign`, `asset_service_tasks.complete`
+- `asset_service_reminders.view`, `asset_service_reminders.manage`
 - `projects.view`, `projects.create`, `projects.update`, `projects.archive`
 - `tasks.view`, `tasks.create`, `tasks.update`, `tasks.transition`, `tasks.delete`
 - `comments.create`, `comments.delete`
