@@ -19,7 +19,7 @@ class HardwareResource extends Resource
 {
     protected static ?string $model = Hardware::class;
 
-    protected static ?string $navigationGroup = 'bookmark';
+    protected static ?string $navigationGroup = 'Reference';
 
     protected static ?string $navigationIcon = 'heroicon-o-chip';
 

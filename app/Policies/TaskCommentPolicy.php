@@ -12,17 +12,19 @@ class TaskCommentPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->can('comments.create') || $user->can('tasks.view');
+        return $user->can('comments.create')
+            || $user->can('tasks.view')
+            || $user->can('view_any_task');
     }
 
     public function view(User $user, TaskComment $comment): bool
     {
-        return $user->can('tasks.view') && $user->hasCompanyModel($comment);
+        return ($user->can('tasks.view') || $user->can('view_task')) && $user->hasCompanyModel($comment);
     }
 
     public function create(User $user): bool
     {
-        return $user->can('comments.create') && ! is_null($user->current_company_id);
+        return ($user->can('comments.create') || $user->can('create_task')) && ! is_null($user->current_company_id);
     }
 
     public function delete(User $user, TaskComment $comment): bool
@@ -31,6 +33,8 @@ class TaskCommentPolicy
             return false;
         }
 
-        return $user->can('comments.delete') || (int) $comment->author_user_id === (int) $user->id;
+        return $user->can('comments.delete')
+            || $user->can('delete_task')
+            || (int) $comment->author_user_id === (int) $user->id;
     }
 }

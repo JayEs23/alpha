@@ -16,7 +16,11 @@ class HardwarePolicy
      */
     public function viewAny(User $user)
     {
-        return true;
+        return $user->isSuperAdmin()
+            || $user->hasRole(config('filament-shield.filament_user.name', 'filament_user'))
+            || $user->can('view_any_hardware')
+            || $user->can('view_any_asset')
+            || $user->can('assets.view');
     }
 
     /**

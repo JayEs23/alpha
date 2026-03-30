@@ -243,6 +243,11 @@ class AssetService implements AssetServiceInterface
     {
         $companyId = $this->requiredCompanyId($actor);
         $openStatusId = $this->serviceStatusIdByCode(self::SERVICE_STATUS_OPEN);
+        if ($openStatusId <= 0) {
+            throw new InvalidArgumentException(
+                'Service task status "open" is missing. Run seeders (e.g. AssetOperationsSeeder) so asset_service_task_statuses includes open/completed.'
+            );
+        }
         $generated = 0;
 
         $plans = AssetServicePlan::query()

@@ -14,7 +14,7 @@
                         Open company settings (invite &amp; manage members)
                     </x-filament::button>
                 @endif
-                <x-filament::button tag="a" :href="$this->getInvitationsUrl()" color="gray" icon="heroicon-o-envelope">
+                <x-filament::button tag="a" :href="$this->getInvitationsUrl()" color="gray" icon="heroicon-o-mail">
                     View pending invitations
                 </x-filament::button>
             </div>
@@ -26,7 +26,7 @@
                 If the person is already registered in this application, add them to the company by email from <strong>Company settings</strong> (same page as invitations). You can also create their login first, then attach them below.
             </p>
             <div class="mt-4 flex flex-wrap gap-3">
-                <x-filament::button tag="a" :href="$this->getCreateUserUrl()" icon="heroicon-o-user-plus">
+                <x-filament::button tag="a" :href="$this->getCreateUserUrl()" icon="heroicon-o-user-add">
                     Create user account
                 </x-filament::button>
                 @if($this->getCompanySettingsUrl())

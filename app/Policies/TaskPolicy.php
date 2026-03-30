@@ -12,27 +12,27 @@ class TaskPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->can('tasks.view');
+        return $user->can('tasks.view') || $user->can('view_any_task');
     }
 
     public function view(User $user, Task $task): bool
     {
-        return $user->can('tasks.view') && $user->hasCompanyModel($task);
+        return ($user->can('tasks.view') || $user->can('view_task')) && $user->hasCompanyModel($task);
     }
 
     public function create(User $user): bool
     {
-        return $user->can('tasks.create') && ! is_null($user->current_company_id);
+        return ($user->can('tasks.create') || $user->can('create_task')) && ! is_null($user->current_company_id);
     }
 
     public function update(User $user, Task $task): bool
     {
-        return $user->can('tasks.update') && $user->hasCompanyModel($task);
+        return ($user->can('tasks.update') || $user->can('update_task')) && $user->hasCompanyModel($task);
     }
 
     public function transition(User $user, Task $task): bool
     {
-        return $user->can('tasks.transition') && $user->hasCompanyModel($task);
+        return ($user->can('tasks.transition') || $user->can('update_task')) && $user->hasCompanyModel($task);
     }
 
     public function comment(User $user, Task $task): bool
@@ -42,6 +42,6 @@ class TaskPolicy
 
     public function delete(User $user, Task $task): bool
     {
-        return $user->can('tasks.delete') && $user->hasCompanyModel($task);
+        return ($user->can('tasks.delete') || $user->can('delete_task')) && $user->hasCompanyModel($task);
     }
 }

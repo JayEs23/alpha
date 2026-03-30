@@ -12,26 +12,26 @@ class ProjectPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->can('projects.view');
+        return $user->can('projects.view') || $user->can('view_any_project');
     }
 
     public function view(User $user, Project $project): bool
     {
-        return $user->can('projects.view') && $user->hasCompanyModel($project);
+        return ($user->can('projects.view') || $user->can('view_project')) && $user->hasCompanyModel($project);
     }
 
     public function create(User $user): bool
     {
-        return $user->can('projects.create') && ! is_null($user->current_company_id);
+        return ($user->can('projects.create') || $user->can('create_project')) && ! is_null($user->current_company_id);
     }
 
     public function update(User $user, Project $project): bool
     {
-        return $user->can('projects.update') && $user->hasCompanyModel($project);
+        return ($user->can('projects.update') || $user->can('update_project')) && $user->hasCompanyModel($project);
     }
 
     public function delete(User $user, Project $project): bool
     {
-        return $user->can('projects.archive') && $user->hasCompanyModel($project);
+        return ($user->can('projects.archive') || $user->can('delete_project')) && $user->hasCompanyModel($project);
     }
 }

@@ -7,6 +7,7 @@ use App\Filament\Resources\UserResource\Widgets\UserOverview;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
+use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
@@ -40,6 +41,10 @@ class UserResource extends Resource
                     ->dehydrateStateUsing(fn (?string $state): ?string => filled($state) ? Hash::make($state) : null)
                     ->dehydrated(fn (?string $state): bool => filled($state))
                     ->required(fn ($livewire): bool => $livewire instanceof Pages\CreateUser),
+                Forms\Components\CheckboxList::make('roles')
+                    ->relationship('roles', 'name', fn (Builder $query) => $query->where('guard_name', 'web')->orderBy('name'))
+                    ->columns(2)
+                    ->helperText(__('Spatie roles (e.g. super_admin for full Filament access). Company team roles are set under Company, not here.')),
             ]);
     }
 
@@ -57,6 +62,8 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
+                Tables\Columns\TagsColumn::make('roles.name')
+                    ->label(__('Roles')),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime(),
                 // Tables\Columns\TextColumn::make('currentCompany.name'),
@@ -92,6 +99,11 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('roles');
     }
 
     protected function getHeaderWidgets(): array

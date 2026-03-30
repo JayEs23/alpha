@@ -37,7 +37,7 @@ class SchedulePolicy
      */
     public function create(User $user)
     {
-        return $user->can('create_schedule');
+        return $user->can('create_schedule') || $user->isSuperAdmin();
     }
 
     /**
@@ -47,7 +47,7 @@ class SchedulePolicy
      */
     public function update(User $user, Schedule $schedule)
     {
-        return $user->can('update_schedule');
+        return $user->can('update_schedule') || $user->isSuperAdmin();
     }
 
     /**

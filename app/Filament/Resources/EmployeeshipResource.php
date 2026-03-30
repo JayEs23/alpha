@@ -14,6 +14,13 @@ class EmployeeshipResource extends Resource
 {
     protected static ?string $model = Employeeship::class;
 
+    /** Human label: rows are company ↔ user memberships (FilamentCompanies `company_user` pivot). */
+    protected static ?string $navigationLabel = 'Company members';
+
+    protected static ?string $modelLabel = 'membership';
+
+    protected static ?string $pluralModelLabel = 'Company members';
+
     protected static ?string $navigationIcon = 'heroicon-o-emoji-happy';
 
     protected static ?string $navigationGroup = 'company';

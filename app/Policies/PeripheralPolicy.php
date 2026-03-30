@@ -12,7 +12,11 @@ class PeripheralPolicy
 
     public function viewAny(User $user)
     {
-        return $user->can('view_any_peripheral');
+        return $user->isSuperAdmin()
+            || $user->hasRole(config('filament-shield.filament_user.name', 'filament_user'))
+            || $user->can('view_any_peripheral')
+            || $user->can('view_any_asset')
+            || $user->can('assets.view');
     }
 
     public function view(User $user, Peripheral $peripheral)

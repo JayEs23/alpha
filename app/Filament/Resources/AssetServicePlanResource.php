@@ -6,6 +6,7 @@ use App\Filament\Resources\AssetServicePlanResource\Pages;
 use App\Models\AssetServicePlan;
 use App\Services\Contracts\AssetServiceInterface;
 use Filament\Forms;
+use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -51,9 +52,40 @@ class AssetServicePlanResource extends Resource
                     ->label('Generate Due Tasks')
                     ->icon('heroicon-o-refresh')
                     ->action(function (): void {
-                        /** @var AssetServiceInterface $assetService */
-                        $assetService = app(AssetServiceInterface::class);
-                        $assetService->generateDueServiceTasks(now(), auth()->user());
+                        $user = auth()->user();
+                        if ($user === null) {
+                            return;
+                        }
+
+                        try {
+                            /** @var AssetServiceInterface $assetService */
+                            $assetService = app(AssetServiceInterface::class);
+                            $count = $assetService->generateDueServiceTasks(now(), $user);
+
+                            if ($count > 0) {
+                                Notification::make()
+                                    ->title(__('Due tasks generated'))
+                                    ->body(__('Created :count new service task(s) from plans whose next due date is today or earlier.', ['count' => $count]))
+                                    ->success()
+                                    ->send();
+
+                                return;
+                            }
+
+                            Notification::make()
+                                ->title(__('No tasks generated'))
+                                ->body(
+                                    __('No matching plans: each plan must be active, have a "next due" date on or before now, and must not already have an open service task for that plan.')
+                                )
+                                ->warning()
+                                ->send();
+                        } catch (\InvalidArgumentException $e) {
+                            Notification::make()
+                                ->title(__('Could not generate tasks'))
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
                     })
                     ->requiresConfirmation(),
             ])

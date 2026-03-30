@@ -16,7 +16,7 @@ class SoftwareResource extends Resource
 {
     protected static ?string $model = Software::class;
 
-    protected static ?string $navigationGroup = 'bookmark';
+    protected static ?string $navigationGroup = 'Reference';
 
     protected static ?string $navigationIcon = 'heroicon-o-desktop-computer';
 

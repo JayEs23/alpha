@@ -23,7 +23,9 @@ class CompanyPolicyMain
      */
     public function view(User $user, Company $company): bool
     {
-        return $user->belongsToCompany($company) || $user->can('view_any_company');
+        return $user->belongsToCompany($company)
+            || $user->can('view_company')
+            || $user->can('view_any_company');
     }
 
     /**

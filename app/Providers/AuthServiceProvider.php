@@ -8,6 +8,8 @@ use App\Models\Asset;
 use App\Models\AssetServicePlan;
 use App\Models\AssetServiceTask;
 use App\Models\Company;
+use App\Models\CompanyInvitation;
+use App\Models\Employeeship;
 use App\Models\Hardware;
 use App\Models\Peripheral;
 use App\Models\Project;
@@ -21,7 +23,9 @@ use App\Policies\ActivityPolicy;
 use App\Policies\AssetPolicy;
 use App\Policies\AssetServicePlanPolicy;
 use App\Policies\AssetServiceTaskPolicy;
+use App\Policies\CompanyInvitationPolicy;
 use App\Policies\CompanyPolicyMain;
+use App\Policies\EmployeeshipPolicy;
 use App\Policies\HardwarePolicy;
 use App\Policies\PeripheralPolicy;
 use App\Policies\ProjectPolicy;
@@ -45,6 +49,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Company::class => CompanyPolicyMain::class,
+        CompanyInvitation::class => CompanyInvitationPolicy::class,
+        Employeeship::class => EmployeeshipPolicy::class,
         Hardware::class => HardwarePolicy::class,
         Peripheral::class => PeripheralPolicy::class,
         Provider::class => ProviderPolicy::class,

@@ -66,7 +66,25 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function canAccessFilament(): bool
     {
-        return $this->isSuperAdmin();
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        // Filament Shield: panel access for non–super-admins (assign `filament_user` and/or resource perms).
+        if ($this->hasRole(config('filament-shield.filament_user.name', 'filament_user'))) {
+            return true;
+        }
+
+        // Domain + Shield: allow panel if they can open the Assets area (custom or generated perms).
+        // Nested Filament resources use Shield identifiers with "::" (see FilamentShield::getDefaultPermissionIdentifier).
+        return $this->can('assets.view')
+            || $this->can('view_any_asset')
+            || $this->can('view_any_asset::service::plan')
+            || $this->can('view_any_asset::service::task')
+            || $this->can('view_any_project')
+            || $this->can('view_any_task')
+            || $this->can('projects.view')
+            || $this->can('tasks.view');
     }
 
     public function getFilamentAvatarUrl(): ?string

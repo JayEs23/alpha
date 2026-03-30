@@ -12,7 +12,11 @@ class ProviderPolicy
 
     public function viewAny(User $user)
     {
-        return $user->can('view_any_provider');
+        return $user->isSuperAdmin()
+            || $user->hasRole(config('filament-shield.filament_user.name', 'filament_user'))
+            || $user->can('view_any_provider')
+            || $user->can('view_any_asset')
+            || $user->can('assets.view');
     }
 
     public function view(User $user, Provider $provider)
