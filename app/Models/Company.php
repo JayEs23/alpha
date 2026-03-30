@@ -30,6 +30,7 @@ class Company extends FilamentCompaniesCompany
     protected $fillable = [
         'name',
         'personal_company',
+        'user_id',
     ];
 
     /**

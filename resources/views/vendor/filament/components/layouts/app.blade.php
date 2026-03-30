@@ -34,7 +34,8 @@
 
             <div
                 @class([
-                    'filament-main-content mx-auto w-full flex-1 px-4 md:px-6 lg:px-8',
+                    // Tighter horizontal padding than Filament defaults (was px-4 md:px-6 lg:px-8)
+                    'filament-main-content mx-auto w-full flex-1 px-2 sm:px-3 md:px-4',
                     match ($maxContentWidth ??= config('filament.layout.max_content_width')) {
                         null, '7xl', '' => 'max-w-7xl',
                         'xl' => 'max-w-xl',

@@ -120,8 +120,8 @@ return [
     'profile_photo_disk' => 'public',
 
     'employee_invite' => [
-        'email' => false,
+        'email' => true,
         'notification' => true,
-    ]
+    ],
 
 ];

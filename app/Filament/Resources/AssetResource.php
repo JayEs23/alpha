@@ -9,6 +9,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -48,14 +49,45 @@ class AssetResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('asset_tag')->searchable(),
-                Tables\Columns\TextColumn::make('category.name')->label('Category'),
-                Tables\Columns\TextColumn::make('status.name')->label('Status'),
-                Tables\Columns\TextColumn::make('provider.name')->label('Provider'),
-                Tables\Columns\TextColumn::make('assignedUser.name')->label('Assigned To'),
-                Tables\Columns\TextColumn::make('purchased_at')->date(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->wrap()
+                    ->limit(48),
+                Tables\Columns\TextColumn::make('asset_tag')
+                    ->searchable()
+                    ->toggleable()
+                    ->visibleFrom('sm'),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category')
+                    ->toggleable()
+                    ->visibleFrom('md'),
+                Tables\Columns\BadgeColumn::make('status.name')
+                    ->label('Status')
+                    ->colors([
+                        'success' => fn ($state): bool => is_string($state) && in_array(strtolower((string) $state), ['active', 'working', 'good', 'deployed', 'new'], true),
+                        'warning' => fn ($state): bool => is_string($state) && in_array(strtolower((string) $state), ['idle', 'maintenance'], true),
+                        'danger' => fn ($state): bool => is_string($state) && str_contains(strtolower((string) $state), 'fault'),
+                        'secondary' => fn ($state): bool => is_string($state) && str_contains(strtolower((string) $state), 'retired'),
+                    ]),
+                Tables\Columns\TextColumn::make('provider.name')
+                    ->label('Provider')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),
+                Tables\Columns\TextColumn::make('assignedUser.name')
+                    ->label('Assigned')
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('xl'),
+                Tables\Columns\TextColumn::make('purchased_at')
+                    ->date()
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('xl'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('2xl'),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -63,9 +95,14 @@ class AssetResource extends Resource
                 Tables\Filters\SelectFilter::make('status_id')->relationship('status', 'name'),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
+                    ->label('Actions')
+                    ->icon('heroicon-o-dots-vertical')
+                    ->tooltip('Actions'),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

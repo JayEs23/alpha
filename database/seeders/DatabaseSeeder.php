@@ -17,24 +17,14 @@ class DatabaseSeeder extends Seeder
             PermissionsTableSeeder::class,
             RolesTableSeeder::class,
             RoleHasPermissionsTableSeeder::class,
+            WorkDomainPermissionsSeeder::class,
             UserSeeder::class,
             AssetOperationsSeeder::class,
+            WorkDomainSeeder::class,
         ]);
 
-        $this->command->info('Running User factory...');
-        \App\Models\User::factory(10)->create();
-
-        $this->command->info('Running Provider factory...');
-        \App\Models\Provider::factory(20)->create();
-
-        $this->command->info('Running Peripheral factory...');
-        \App\Models\Peripheral::factory(200)->create();
-
-        $this->command->info('Running Software factory...');
-        \App\Models\Software::factory(200)->create();
-
-        $this->command->info('Running Hardware factory...');
-        \App\Models\Hardware::factory(400)->create();
+        // Inventory for hardware / provider-linked records comes from
+        // DevAssetsCsvSeeder via AssetOperationsSeeder (public/devassets CSVs).
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
@@ -42,5 +32,5 @@ class DatabaseSeeder extends Seeder
         // ]);
 
     }
-    //php artisan iseed permissions,roles
+    // php artisan iseed permissions,roles
 }

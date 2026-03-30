@@ -106,6 +106,7 @@ return [
         'path' => app_path('Filament/Pages'),
         'register' => [
             Pages\Dashboard::class,
+            \App\Filament\Pages\ManageTeam::class,
         ],
     ],
 
@@ -239,7 +240,8 @@ return [
         'footer' => [
             'should_show_logo' => false,
         ],
-        'max_content_width' => null,
+        // Use full width of the main column (avoids large empty gutters from max-w-7xl + mx-auto)
+        'max_content_width' => 'full',
         'notifications' => [
             'vertical_alignment' => 'top',
             'alignment' => 'right',

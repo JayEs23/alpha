@@ -10,7 +10,6 @@ use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\Column;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -52,9 +51,9 @@ class HardwareRelationManager extends RelationManager
                 Select::make('type')
                     ->label('Type of Hardware')
                     ->options(HardwareType::options()),
-                Forms\Components\Select::make('user_id')
+                Select::make('user_id')
                     ->relationship('user', 'name'),
-                Forms\Components\Select::make('provider_id')
+                Select::make('provider_id')
                     ->relationship('provider', 'name')
                     ->label('Provider')
                     ->required(),
@@ -68,25 +67,28 @@ class HardwareRelationManager extends RelationManager
 
     public static function table(Table $table): Table
     {
-        Column::configureUsing(function (Column $column): void {
-            $column
-                ->toggleable()
-                ->searchable()
-                ->sortable();
-        });
-
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('model'),
-                Tables\Columns\TextColumn::make('user.name'),
-                Tables\Columns\TextColumn::make('make'),
-                Tables\Columns\TextColumn::make('model'),
-                Tables\Columns\TextColumn::make('os_version'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('model')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('make')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('os_version')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('current')
-                    ->boolean(),
+                    ->boolean()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('purchased_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

@@ -10,12 +10,13 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\Column;
 
 class ProviderResource extends Resource
 {
     protected static ?string $model = Provider::class;
+
     protected static ?string $modelLabel = 'Provider';
+
     protected static ?string $pluralModelLabel = 'Providers';
 
     protected static ?int $navigationSort = 3;
@@ -36,18 +37,14 @@ class ProviderResource extends Resource
 
     public static function table(Table $table): Table
     {
-        Column::configureUsing(function (Column $column): void {
-            $column
-                ->toggleable()
-                ->searchable()
-                ->sortable();
-        });
-
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([])
             ->actions([

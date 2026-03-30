@@ -1,0 +1,24 @@
+S/N,DEVICE NAME,DESCRIPTION,QTY,STATUS,RACK
+1,Fibre Patch Pannel,,2,Working,Rack 1
+2,Glo Radio Device,Glo Device,2,Idle,Rack 1
+3,MTN E1 Device,MTN Device,1,Working,Rack 1
+4,21st Century Device,,1,Idle,Rack 1
+5,Airtel Radio Device,Airtel Device ,1,Idle,Rack 1
+6,Main One Internet Device,Internet Device,1,Working,Rack 1
+7,Cisco 2960 Switch,Main One Internet Switch,1,Working,Rack 1
+8,Cisco 2960 Switch,Smart City Project Switch,1,Idle,Rack 1
+9,Fibre Patch Pannel,Airtel Fibre Patch Pannel,1,Active,Rack 2
+10,Fibre Media Converter,Airtel Fibre \Media Converter,1,Active,Rack 2
+11,Circuit Breaker,Circuite Breaker for all Telco Devices,5,Working,Rack 3
+12,Patch Pannel,Glo Patch Pannel,1,Working,Rack 4
+13,Fibre Media Converter,Glo Fibre \Media Converter,1,Working,Rack 4
+14,Cisco 2960 Switch,Smart City Core Switch,2,Idle,Rack 5/6
+15,Smart City Servers,Smart City Servers,6,Idle,Rack 5/6
+16,Huawei Switches,Smart City Switches,4,Idle,Rack 5/6
+17,AC,Air Conditioner,2,1 Working,Others
+18,HP Computer,HP All Combined Computer ,21,idle,Others
+19,Mouse,,,,
+20,Keyboard,Keyboard - 10 bad,35,Idle,
+21,Power Cable,14,,,
+22,Power Adapter,10 - 5 bad,,,
+23,Headset,VT Headset,17,idle,

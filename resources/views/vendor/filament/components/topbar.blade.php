@@ -10,7 +10,8 @@
         ])
     }}
 >
-    <div class="flex w-full items-center px-2 sm:px-4 md:px-6 lg:px-8">
+    {{-- Match filament-main-content horizontal padding --}}
+    <div class="flex w-full items-center px-2 sm:px-3 md:px-4">
         <button
             x-cloak
             x-data="{}"

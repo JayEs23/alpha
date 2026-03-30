@@ -1,0 +1,45 @@
+S/N,DEVICE NAME,DESCRIPTION,QTY,STATUS,LICENSE,LICENSE STATUS,OS VERSION,RACK
+1,Patch Pannels,,11,Working,,,,RACK 1
+2,Avaya POE Switch,Avaya Switches,3,Idle,,,,RACK 2
+3,Cisco 3560 Switch,Cisco switches 48 Ports,3,Working,,,,RACK 2
+4,Patch Pannels,,2,Working,,,,RACK 2
+5,Cisco 3560 Switch,Cisco switch 48 Ports,1,Faulty,,,,RACK 2
+6,Cisco 2960 Switch,Cisco switch 48 Ports,1,Faulty,,,,RACK 2
+7,Cyberoam Device,Firewall Device,1,Working,Yes,Expired ,,RACK 2
+8,Fibre Patch Pannel,,1,Idle,,,,RACK 3
+9,Patch Pannel,,1,Working,,,,RACK 3
+10,Router,,1,Faulty,,,,RACK 3
+11,HP Proliant DL320e Server,Video Wall Server,1,Working,,,Windows Server 2012,RACK 3
+12,HP Proliant DL380p Server,Microsoft Dynamics CRM Server,1,Working,NIL,,Windows Server 2012,RACK 3
+13,HP Proliant DL380p Server,Media Server for Altigen & AudioCodes,1,Working,,,Windows Server 2008,RACK 3
+14,HP Proliant DL380p Server,Domain Controller 2 AD ,1,Working,,,Windows Server 2008,RACK 3
+15,HP Proliant DL380p Server,Altigen Max Administrator Ver. 6.5,1,Working,Yes,Valid,Windows Server 2003,RACK 3
+16,HP Proliant DL380p Server,CDR Server,1,Working,,,Windows Server 2008,RACK 3
+17,HP Proliant DL380p Server,Old Domain Controller,1,Faulty,,,,RACK 3
+18,HP Proliant DL380p Server,,1,Faulty,,,,RACK 3
+19,HP Proliant DL380p Server,Altireports Server,1,Working,,,Windows Server 2008,RACK 3
+20,HP CPU,,2,Faulty,,,,RACK 3
+21,iSMS Server,SMS Gateway,1,Idle,,,,RACK 4
+22,AudioCodes Device,AudioCodes used for Altigen,1,Working,,,,RACK 4
+23,Avaya Call Solution,Avaya Call Center Server,1,Idle,,,Linux OS,RACK 4
+24,Avaya Ipo Gateway,Avaya Gateway,1,Idle,,,,RACK 4
+25,Avaya Reporting Server,Avaya Reporting Server,1,Idle,,,Windows Server 2008,RACK 4
+26,HP Proliant DL380P G8 Server,,1,Idle,,,,RACK 4
+27,HP Proliant DL380P G5 Server,,4,Idle,,,,RACK 4
+28,HP Storage Works G2,Storage Server,1,Faulty,,,,RACK 4
+29,Patch Pannel,,1,Idle,,,,RACK 4
+30,Altigen Server Box,Altigen Box,1,Faulty,,,,RACK 5
+31,VICON DVR,CCTV DVR,2,Faulty,,,,RACK 5
+32,HIKVISION NVR,CCTV NVR,1,Working,,,,RACK 5
+33,Monitor,,1,Idle,,,,RACK 5
+34,AC,Air Conditioner (standing),1,Faulty,,,,Others
+35,Wall Unit,AC,1,Working,,,,Others
+,,,,,,,,
+,,,,,,,,
+,HPE DL380 4210R 1P 32G NC 8SFF Svr,CZ22020127,P24841-B21,WORKING,,,Windows server 2016,
+,HPE DL380 4210R 1P 32G NC 8SFF Svr,CZ22020131,P24841-B21,WORKING,,,Windows server 2016,
+,HPE DL380 4210R 1P 32G NC 8SFF Svr,CZ22270362,P50751-B21,WORKING,,,N/A,
+,FORTIGATE-60F,FGT60FTK2109BFMZ,FG-60F-BDL-950-12,WORKING,YES,EXPIRED,,
+,AUDIO CODES,00908F36C127 / 00908F37D58,,WORKING,,,,
+,AUDIO CODES,MEDIANT 2000,,FAULTY,,,,
+,AUDIO CODES,MEDIANT 2001,,WORKING,,,,
