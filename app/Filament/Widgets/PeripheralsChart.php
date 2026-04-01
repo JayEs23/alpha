@@ -6,6 +6,7 @@ use App\Actions\Trend;
 use App\Models\Peripheral;
 use Filament\Widgets\LineChartWidget;
 use Flowframe\Trend\TrendValue;
+use Illuminate\Support\Facades\Cache;
 
 class PeripheralsChart extends LineChartWidget
 {
@@ -31,18 +32,28 @@ class PeripheralsChart extends LineChartWidget
         }
 
         $activeFilter = $this->filter;
+        $companyId = (int) (auth()->user()?->current_company_id ?? 0);
+        $chartData = Cache::remember(
+            "dashboard:peripherals-chart:{$companyId}:{$activeFilter}",
+            now()->addMinutes(1),
+            function () use ($activeFilter): array {
+                /** @var Trend $publishedTrend */
+                $publishedTrend = Trend::model(Peripheral::class);
+                /** @var Trend $purchasedTrend */
+                $purchasedTrend = Trend::model(Peripheral::class);
 
-        /** @var Trend $trend */
-        $trend = Trend::model(Peripheral::class);
-        $data = $trend
-            ->filterBy($activeFilter)
-            ->count();
-
-        /** @var Trend $purchasedTrend */
-        $purchasedTrend = Trend::model(Peripheral::class);
-        $purchased = $purchasedTrend
-            ->filterBy($activeFilter)
-            ->count('purchased_at');
+                return [
+                    'published' => $publishedTrend
+                    ->filterBy($activeFilter)
+                    ->count(),
+                    'purchased' => $purchasedTrend
+                    ->filterBy($activeFilter)
+                    ->count('purchased_at'),
+                ];
+            },
+        );
+        $data = $chartData['published'];
+        $purchased = $chartData['purchased'];
 
         return [
             'datasets' => [

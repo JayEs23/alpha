@@ -44,7 +44,8 @@ class ProviderResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([])
             ->actions([

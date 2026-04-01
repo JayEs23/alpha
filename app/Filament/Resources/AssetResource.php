@@ -50,13 +50,22 @@ class AssetResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Asset')
                     ->searchable()
                     ->wrap()
-                    ->limit(48),
+                    ->limit(48)
+                    ->toggleable()
+                    ->description(fn (Asset $record): ?string => $record->display_subtitle),
                 Tables\Columns\TextColumn::make('asset_tag')
                     ->searchable()
                     ->toggleable()
                     ->visibleFrom('sm'),
+                Tables\Columns\TextColumn::make('serial')
+                    ->label('Serial')
+                    ->searchable()
+                    ->placeholder('—')
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->visibleFrom('lg'),
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
                     ->toggleable()
@@ -68,7 +77,8 @@ class AssetResource extends Resource
                         'warning' => fn ($state): bool => is_string($state) && in_array(strtolower((string) $state), ['idle', 'maintenance'], true),
                         'danger' => fn ($state): bool => is_string($state) && str_contains(strtolower((string) $state), 'fault'),
                         'secondary' => fn ($state): bool => is_string($state) && str_contains(strtolower((string) $state), 'retired'),
-                    ]),
+                    ])
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('provider.name')
                     ->label('Provider')
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -128,6 +138,12 @@ class AssetResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->with([
+                'category:id,name',
+                'status:id,name',
+                'provider:id,name',
+                'assignedUser:id,name',
+            ])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

@@ -255,17 +255,31 @@ class AssetService implements AssetServiceInterface
             ->where('is_active', true)
             ->whereNotNull('next_due_at')
             ->where('next_due_at', '<=', $asOf)
+            ->select([
+                'id',
+                'asset_id',
+                'name',
+                'instructions',
+                'next_due_at',
+                'service_interval_days',
+                'default_assigned_user_id',
+                'reminder_days_before',
+            ])
             ->get();
 
-        DB::transaction(function () use ($plans, $openStatusId, $asOf, $companyId, $actor, &$generated): void {
-            foreach ($plans as $plan) {
-                $alreadyOpen = AssetServiceTask::query()
-                    ->where('company_id', $companyId)
-                    ->where('service_plan_id', $plan->id)
-                    ->where('status_id', $openStatusId)
-                    ->exists();
+        $openPlanIds = AssetServiceTask::query()
+            ->where('company_id', $companyId)
+            ->where('status_id', $openStatusId)
+            ->whereIn('service_plan_id', $plans->pluck('id'))
+            ->pluck('service_plan_id')
+            ->filter()
+            ->map(static fn ($id): int => (int) $id)
+            ->all();
+        $openPlanLookup = array_flip($openPlanIds);
 
-                if ($alreadyOpen) {
+        DB::transaction(function () use ($plans, $openPlanLookup, $openStatusId, $companyId, $actor, &$generated): void {
+            foreach ($plans as $plan) {
+                if (isset($openPlanLookup[(int) $plan->id])) {
                     continue;
                 }
 

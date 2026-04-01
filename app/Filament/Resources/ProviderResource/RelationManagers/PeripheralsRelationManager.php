@@ -46,15 +46,17 @@ class PeripheralsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name'),
-                Tables\Columns\TextColumn::make('make'),
-                Tables\Columns\TextColumn::make('model'),
-                Tables\Columns\TextColumn::make('serial'),
-                Tables\Columns\TextColumn::make('type'),
+                Tables\Columns\TextColumn::make('user.name')->toggleable(),
+                Tables\Columns\TextColumn::make('make')->toggleable(),
+                Tables\Columns\TextColumn::make('model')->toggleable(),
+                Tables\Columns\TextColumn::make('serial')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('type')->toggleable(),
                 Tables\Columns\IconColumn::make('current')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('purchased_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

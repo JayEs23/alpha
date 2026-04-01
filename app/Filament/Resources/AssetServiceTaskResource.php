@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AssetServiceTaskResource\Pages;
+use App\Models\Asset;
 use App\Models\AssetServiceTask;
 use App\Services\Contracts\AssetServiceInterface;
 use Filament\Forms;
@@ -10,6 +11,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class AssetServiceTaskResource extends Resource
 {
@@ -24,14 +26,19 @@ class AssetServiceTaskResource extends Resource
         return $form->schema([
             Forms\Components\Select::make('asset_id')
                 ->relationship('asset', 'name')
+                ->getOptionLabelFromRecordUsing(fn (Asset $record): string => $record->display_name)
+                ->searchable(['name', 'asset_tag', 'serial'])
                 ->required(),
             Forms\Components\Select::make('service_plan_id')
-                ->relationship('servicePlan', 'name'),
+                ->relationship('servicePlan', 'name')
+                ->searchable(),
             Forms\Components\Select::make('status_id')
                 ->relationship('status', 'name')
+                ->searchable()
                 ->required(),
             Forms\Components\Select::make('assigned_to_user_id')
-                ->relationship('assignee', 'name'),
+                ->relationship('assignee', 'name')
+                ->searchable(),
             Forms\Components\TextInput::make('title')
                 ->required()
                 ->maxLength(255),
@@ -46,11 +53,14 @@ class AssetServiceTaskResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')->searchable(),
-                Tables\Columns\TextColumn::make('asset.name')->label('Asset'),
-                Tables\Columns\TextColumn::make('status.name')->label('Status'),
-                Tables\Columns\TextColumn::make('assignee.name')->label('Assignee'),
-                Tables\Columns\TextColumn::make('due_at')->dateTime(),
-                Tables\Columns\TextColumn::make('completed_at')->dateTime(),
+                Tables\Columns\TextColumn::make('asset.name')
+                    ->label('Asset')
+                    ->formatStateUsing(fn ($state, AssetServiceTask $record): string => $record->asset?->display_name ?? (string) $state)
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('status.name')->label('Status')->toggleable(),
+                Tables\Columns\TextColumn::make('assignee.name')->label('Assignee')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('due_at')->dateTime()->toggleable(),
+                Tables\Columns\TextColumn::make('completed_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status_id')->relationship('status', 'name'),
@@ -99,5 +109,16 @@ class AssetServiceTaskResource extends Resource
             'create' => Pages\CreateAssetServiceTask::route('/create'),
             'edit' => Pages\EditAssetServiceTask::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with([
+                'asset:id,name,asset_tag,serial,metadata,assigned_user_id',
+                'asset.assignedUser:id,name',
+                'status:id,name',
+                'assignee:id,name',
+            ]);
     }
 }

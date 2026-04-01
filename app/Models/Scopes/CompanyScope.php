@@ -8,18 +8,28 @@ use Illuminate\Database\Eloquent\Scope;
 
 class CompanyScope implements Scope
 {
+    /** @var array<int, bool> */
+    private static array $superAdminCache = [];
+
     /**
      * Apply the scope to a given Eloquent query builder.
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (! auth()->check()) {
+        /** @var \App\Models\User|null $user */
+        $user = auth()->user();
+
+        if (! $user) {
             return;
         }
 
-        $user = auth()->user();
+        $userId = (int) $user->getAuthIdentifier();
 
-        if ($user->hasRole('super_admin')) {
+        if (! array_key_exists($userId, self::$superAdminCache)) {
+            self::$superAdminCache[$userId] = $user->hasRole('super_admin');
+        }
+
+        if (self::$superAdminCache[$userId]) {
             return;
         }
 

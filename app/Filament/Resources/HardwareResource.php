@@ -74,38 +74,49 @@ class HardwareResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('provider.name')
                     ->label('Provider')
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('make'),
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('make')->toggleable(),
                 Tables\Columns\TextColumn::make('model')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\BadgeColumn::make('serial')
                     ->color('primary')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('os_name')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('os_version')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('type')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('ram'),
-                Tables\Columns\TextColumn::make('cpu'),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('ram')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('cpu')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\IconColumn::make('current')
                     ->boolean()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('purchased_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 // php artisan make:filament-relation-manager ProviderResource hardware model --soft-deletes --view
                 // Tables\Columns\TextColumn::make('updated_at')
                 //     ->dateTime(),
@@ -159,6 +170,10 @@ class HardwareResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->with([
+                'user:id,name',
+                'provider:id,name',
+            ])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

@@ -69,4 +69,41 @@ class Asset extends Model
     {
         return $this->hasMany(AssetServiceTask::class, 'asset_id');
     }
+
+    public function getDisplayLabelAttribute(): string
+    {
+        return $this->name;
+    }
+
+    public function getDisplaySubtitleAttribute(): ?string
+    {
+        $office = data_get($this->metadata ?? [], 'office');
+        $identifier = $office
+            ?: $this->assignedUser?->name
+            ?: $this->asset_tag
+            ?: $this->serial;
+
+        if (! $identifier) {
+            return null;
+        }
+
+        $parts = [$identifier];
+
+        if ($this->asset_tag && $identifier !== $this->asset_tag) {
+            $parts[] = $this->asset_tag;
+        }
+
+        if ($this->serial && $this->serial !== $identifier) {
+            $parts[] = $this->serial;
+        }
+
+        return implode(' • ', $parts);
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->display_subtitle
+            ? "{$this->display_label} - {$this->display_subtitle}"
+            : $this->display_label;
+    }
 }

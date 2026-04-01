@@ -9,6 +9,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class EmployeeshipResource extends Resource
 {
@@ -44,13 +45,17 @@ class EmployeeshipResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $user = auth()->user();
+        $isSuperAdmin = $user instanceof \App\Models\User && $user->isSuperAdmin();
+
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('company.name')->visible(auth()->user()->isSuperAdmin()),
+                Tables\Columns\TextColumn::make('company.name')->visible($isSuperAdmin)->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name'),
-                Tables\Columns\TextColumn::make('role'),
+                Tables\Columns\TextColumn::make('role')->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
@@ -80,5 +85,14 @@ class EmployeeshipResource extends Resource
             // 'create' => Pages\CreateEmployeeship::route('/create'),
             'edit' => Pages\EditEmployeeship::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with([
+                'company:id,name',
+                'user:id,name',
+            ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Actions\Trend;
 use App\Models\Software;
 use Filament\Widgets\LineChartWidget;
 use Flowframe\Trend\TrendValue;
+use Illuminate\Support\Facades\Cache;
 
 class SoftwareChart extends LineChartWidget
 {
@@ -29,10 +30,19 @@ class SoftwareChart extends LineChartWidget
         }
 
         $activeFilter = $this->filter;
+        $companyId = (int) (auth()->user()?->current_company_id ?? 0);
+        $data = Cache::remember(
+            "dashboard:software-chart:{$companyId}:{$activeFilter}",
+            now()->addMinutes(1),
+            function () use ($activeFilter) {
+                /** @var Trend $trend */
+                $trend = Trend::model(Software::class);
 
-        $data = Trend::model(Software::class)
-            ->filterBy($activeFilter)
-            ->count();
+                return $trend
+                    ->filterBy($activeFilter)
+                    ->count();
+            },
+        );
 
         return [
             'datasets' => [

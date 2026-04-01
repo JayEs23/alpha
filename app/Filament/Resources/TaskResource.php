@@ -11,6 +11,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class TaskResource extends Resource
 {
@@ -39,13 +40,13 @@ class TaskResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('project.key')->label('Project')->searchable(),
-                Tables\Columns\TextColumn::make('task_number')->label('#')->sortable(),
+                Tables\Columns\TextColumn::make('project.key')->label('Project')->searchable()->toggleable(),
+                Tables\Columns\TextColumn::make('task_number')->label('#')->sortable()->toggleable(),
                 Tables\Columns\TextColumn::make('title')->searchable(),
-                Tables\Columns\TextColumn::make('status.name')->label('Status'),
-                Tables\Columns\TextColumn::make('priority.name')->label('Priority'),
-                Tables\Columns\TextColumn::make('assignee.name')->label('Assignee'),
-                Tables\Columns\TextColumn::make('due_at')->dateTime()->sortable(),
+                Tables\Columns\TextColumn::make('status.name')->label('Status')->toggleable(),
+                Tables\Columns\TextColumn::make('priority.name')->label('Priority')->toggleable(),
+                Tables\Columns\TextColumn::make('assignee.name')->label('Assignee')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('due_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status_id')->relationship('status', 'name'),
@@ -88,5 +89,16 @@ class TaskResource extends Resource
             'view' => Pages\ViewTask::route('/{record}'),
             'edit' => Pages\EditTask::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with([
+                'project:id,key',
+                'status:id,name',
+                'priority:id,name',
+                'assignee:id,name',
+            ]);
     }
 }

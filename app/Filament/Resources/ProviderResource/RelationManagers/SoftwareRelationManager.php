@@ -46,12 +46,14 @@ class SoftwareRelationManager extends RelationManager
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('type')->toggleable(),
+                Tables\Columns\TextColumn::make('status')->toggleable(),
                 Tables\Columns\IconColumn::make('current')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('purchased_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

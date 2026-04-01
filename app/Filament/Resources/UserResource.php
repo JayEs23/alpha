@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\Column;
 use Illuminate\Support\Facades\Hash;
 use STS\FilamentImpersonate\Tables\Actions\Impersonate;
 
@@ -50,26 +49,29 @@ class UserResource extends Resource
 
     public static function table(Table $table): Table
     {
-        Column::configureUsing(function (Column $column): void {
-            $column
-                ->toggleable()
-                ->sortable();
-        });
-
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TagsColumn::make('roles.name')
-                    ->label(__('Roles')),
+                    ->label(__('Roles'))
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 // Tables\Columns\TextColumn::make('currentCompany.name'),
                 // Tables\Columns\TextColumn::make('current_connected_account_id'),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

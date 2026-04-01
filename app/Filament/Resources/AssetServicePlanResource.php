@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AssetServicePlanResource\Pages;
+use App\Models\Asset;
 use App\Models\AssetServicePlan;
 use App\Services\Contracts\AssetServiceInterface;
 use Filament\Forms;
@@ -11,6 +12,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class AssetServicePlanResource extends Resource
 {
@@ -25,6 +27,8 @@ class AssetServicePlanResource extends Resource
         return $form->schema([
             Forms\Components\Select::make('asset_id')
                 ->relationship('asset', 'name')
+                ->getOptionLabelFromRecordUsing(fn (Asset $record): string => $record->display_name)
+                ->searchable(['name', 'asset_tag', 'serial'])
                 ->required(),
             Forms\Components\TextInput::make('name')
                 ->required()
@@ -37,7 +41,8 @@ class AssetServicePlanResource extends Resource
                 ->default(7)
                 ->required(),
             Forms\Components\Select::make('default_assigned_user_id')
-                ->relationship('defaultAssignedUser', 'name'),
+                ->relationship('defaultAssignedUser', 'name')
+                ->searchable(),
             Forms\Components\DateTimePicker::make('next_due_at'),
             Forms\Components\Textarea::make('instructions'),
             Forms\Components\Toggle::make('is_active')->default(true)->required(),
@@ -90,13 +95,16 @@ class AssetServicePlanResource extends Resource
                     ->requiresConfirmation(),
             ])
             ->columns([
-                Tables\Columns\TextColumn::make('asset.name')->label('Asset')->searchable(),
+                Tables\Columns\TextColumn::make('asset.name')
+                    ->label('Asset')
+                    ->formatStateUsing(fn ($state, AssetServicePlan $record): string => $record->asset?->display_name ?? (string) $state)
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('service_interval_days'),
-                Tables\Columns\TextColumn::make('reminder_days_before'),
-                Tables\Columns\TextColumn::make('defaultAssignedUser.name')->label('Default Assignee'),
-                Tables\Columns\TextColumn::make('next_due_at')->dateTime(),
-                Tables\Columns\IconColumn::make('is_active')->boolean(),
+                Tables\Columns\TextColumn::make('service_interval_days')->toggleable(),
+                Tables\Columns\TextColumn::make('reminder_days_before')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('defaultAssignedUser.name')->label('Default Assignee')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('next_due_at')->dateTime()->toggleable(),
+                Tables\Columns\IconColumn::make('is_active')->boolean()->toggleable(),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active'),
@@ -123,5 +131,15 @@ class AssetServicePlanResource extends Resource
             'create' => Pages\CreateAssetServicePlan::route('/create'),
             'edit' => Pages\EditAssetServicePlan::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with([
+                'asset:id,name,asset_tag,serial,metadata,assigned_user_id',
+                'asset.assignedUser:id,name',
+                'defaultAssignedUser:id,name',
+            ]);
     }
 }

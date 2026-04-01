@@ -52,17 +52,20 @@ class PeripheralResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name'),
+                Tables\Columns\TextColumn::make('user.name')->toggleable(),
                 Tables\Columns\TextColumn::make('provider.name')
-                    ->label('Provider'),
-                Tables\Columns\TextColumn::make('make'),
-                Tables\Columns\TextColumn::make('model'),
-                Tables\Columns\TextColumn::make('serial'),
-                Tables\Columns\TextColumn::make('type'),
+                    ->label('Provider')
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('make')->toggleable(),
+                Tables\Columns\TextColumn::make('model')->toggleable(),
+                Tables\Columns\TextColumn::make('serial')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('type')->toggleable(),
                 Tables\Columns\IconColumn::make('current')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('purchased_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -99,6 +102,10 @@ class PeripheralResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->with([
+                'user:id,name',
+                'provider:id,name',
+            ])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

@@ -9,6 +9,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProjectResource extends Resource
 {
@@ -37,9 +38,9 @@ class ProjectResource extends Resource
                 Tables\Columns\TextColumn::make('key')->searchable(),
                 Tables\Columns\TextColumn::make('name')->searchable(),
                 Tables\Columns\IconColumn::make('is_active')->boolean(),
-                Tables\Columns\TextColumn::make('workflow.name')->label('Workflow'),
-                Tables\Columns\TextColumn::make('leadUser.name')->label('Lead'),
-                Tables\Columns\TextColumn::make('updated_at')->dateTime(),
+                Tables\Columns\TextColumn::make('workflow.name')->label('Workflow')->toggleable(),
+                Tables\Columns\TextColumn::make('leadUser.name')->label('Lead')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')->dateTime()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -64,5 +65,14 @@ class ProjectResource extends Resource
             'view' => Pages\ViewProject::route('/{record}'),
             'edit' => Pages\EditProject::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with([
+                'workflow:id,name',
+                'leadUser:id,name',
+            ]);
     }
 }

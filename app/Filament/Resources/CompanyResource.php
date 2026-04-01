@@ -38,13 +38,16 @@ class CompanyResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('owner.name')
-                    ->label('Creator'),
+                    ->label('Creator')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\IconColumn::make('personal_company')
                     ->label('Personal Company')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 // filter by personal_id
@@ -56,9 +59,7 @@ class CompanyResource extends Resource
                     ]),
                 Tables\Filters\SelectFilter::make('user_id')
                     ->label('Users')
-                    ->options(function () {
-                        return \App\Models\User::all()->pluck('name', 'id');
-                    }),
+                    ->relationship('owner', 'name'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -85,9 +86,15 @@ class CompanyResource extends Resource
     }
     public static function getEloquentQuery(): EloquentBuilder
     {
-        if (!auth()->user()->isSuperAdmin())
-            return parent::getEloquentQuery()->where('id', auth()->user()->current_company_id);
+        $user = auth()->user();
+        $isSuperAdmin = $user instanceof \App\Models\User && $user->isSuperAdmin();
 
-        return parent::getEloquentQuery();
+        if (! $isSuperAdmin)
+            return parent::getEloquentQuery()
+                ->with(['owner:id,name'])
+                ->where('id', $user?->current_company_id);
+
+        return parent::getEloquentQuery()
+            ->with(['owner:id,name']);
     }
 }

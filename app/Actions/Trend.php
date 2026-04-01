@@ -80,10 +80,8 @@ class Trend extends TrendAction
         }
 
         if ($filer === 'all_time') {
-            // get mimium year from data
-            // $minYear = $this->builder->min($this->dateColumn)->year;
             return $this->between(
-                start: now()->subYear(10)->startOfYear(),
+                start: now()->subYears(3)->startOfYear(),
                 end: now(),
             )->perYear();
         }

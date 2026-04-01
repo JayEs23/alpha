@@ -27,10 +27,11 @@ class CompanyInvitationResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('email'),
-                Tables\Columns\TextColumn::make('role'),
+                Tables\Columns\TextColumn::make('role')->toggleable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

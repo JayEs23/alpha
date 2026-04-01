@@ -71,24 +71,31 @@ class HardwareRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('model')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('make')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('os_version')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('status')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 Tables\Columns\IconColumn::make('current')
                     ->boolean()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('purchased_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

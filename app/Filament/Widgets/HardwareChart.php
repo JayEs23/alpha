@@ -6,6 +6,7 @@ use App\Actions\Trend;
 use App\Models\Hardware;
 use Filament\Widgets\LineChartWidget;
 use Flowframe\Trend\TrendValue;
+use Illuminate\Support\Facades\Cache;
 
 class HardwareChart extends LineChartWidget
 {
@@ -29,10 +30,19 @@ class HardwareChart extends LineChartWidget
         }
 
         $activeFilter = $this->filter;
+        $companyId = (int) (auth()->user()?->current_company_id ?? 0);
+        $data = Cache::remember(
+            "dashboard:hardware-chart:{$companyId}:{$activeFilter}",
+            now()->addMinutes(1),
+            function () use ($activeFilter) {
+                /** @var Trend $trend */
+                $trend = Trend::model(Hardware::class);
 
-        $data = Trend::model(Hardware::class)
-            ->filterBy($activeFilter)
-            ->count();
+                return $trend
+                    ->filterBy($activeFilter)
+                    ->count();
+            },
+        );
 
         return [
             'datasets' => [

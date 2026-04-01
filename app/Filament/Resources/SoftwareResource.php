@@ -54,24 +54,31 @@ class SoftwareResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('provider.name')
-                    ->label('Provider'),
+                    ->label('Provider')
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('type'),
-                Tables\Columns\TextColumn::make('status'),
+                Tables\Columns\TextColumn::make('type')->toggleable(),
+                Tables\Columns\TextColumn::make('status')->toggleable(),
                 Tables\Columns\IconColumn::make('current')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('licenses'),
-                Tables\Columns\TextColumn::make('license_period'),
+                    ->boolean()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('licenses')->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('license_period')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('purchased_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('expired_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime(),
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
@@ -108,6 +115,9 @@ class SoftwareResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->with([
+                'provider:id,name',
+            ])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

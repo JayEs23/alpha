@@ -8,6 +8,7 @@ use App\Models\Provider;
 use App\Models\Software;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
+use Illuminate\Support\Facades\Cache;
 
 class StatsOverview extends BaseWidget
 {
@@ -26,20 +27,23 @@ class StatsOverview extends BaseWidget
             return $this->skeletonLoad();
         }
 
-        $hardwares = Hardware::count();
-        $softwares = Software::count();
-        $providers = Provider::count();
-        $peripherals = Peripheral::count();
-
-        // $user = DB::table('users')->where('company_id', auth()->user()->current_company_id)->count();
+        $companyId = (int) (auth()->user()?->current_company_id ?? 0);
+        $counts = Cache::remember(
+            "dashboard:stats-overview:{$companyId}",
+            now()->addMinutes(1),
+            static fn (): array => [
+                'hardware' => Hardware::count(),
+                'software' => Software::count(),
+                'providers' => Provider::count(),
+                'peripherals' => Peripheral::count(),
+            ],
+        );
 
         return [
-            Card::make('Hardware', $hardwares),
-            Card::make('Software', $softwares),
-            Card::make('Providers', $providers),
-            Card::make('Peripherals', $peripherals),
-
-            // Card::make('Puntor', $user),
+            Card::make('Hardware', $counts['hardware']),
+            Card::make('Software', $counts['software']),
+            Card::make('Providers', $counts['providers']),
+            Card::make('Peripherals', $counts['peripherals']),
         ];
     }
 
